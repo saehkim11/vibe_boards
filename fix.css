@@ -1,0 +1,4 @@
+/* HTML hidden 속성이 기존 레이아웃 CSS보다 항상 우선하도록 합니다. */
+[hidden] {
+  display: none !important;
+}

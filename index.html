@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Boardly | 자유 게시판</title>
   <link rel="stylesheet" href="style.css?v=20261031-2">
+  <link rel="stylesheet" href="fix.css?v=1">
+  <style>.post-media{display:block;max-width:100%;max-height:420px;margin:12px 0;border-radius:6px;background:#111}.detail-media .post-media{max-height:560px}</style>
 </head>
 <body>
   <header class="topbar">
@@ -70,6 +72,8 @@
           <input id="postTitle" name="title" maxlength="200" placeholder="제목을 입력하세요" required>
           <label for="postContent">본문</label>
           <textarea id="postContent" name="content" rows="7" placeholder="다른 회원에게 공유할 내용을 입력하세요" required></textarea>
+          <label for="mediaInput">사진 또는 영상 (선택, 최대 10MB)</label>
+          <input id="mediaInput" name="media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm">
           <div class="form-footer"><p id="writeStatus" class="message" role="status" aria-live="polite"></p><button id="writeButton" type="submit">게시글 등록</button></div>
         </form>
       </section>
@@ -87,12 +91,12 @@
         <p id="detailDate" class="post-meta"></p>
         <hr>
         <h3>댓글</h3>
-        <div id="commentList" class="comment-list"></div>
         <form id="commentForm" class="comment-form" hidden>
           <label for="commentContent">댓글 작성</label>
           <textarea id="commentContent" rows="4" placeholder="예의를 지켜 의견을 남겨 주세요." required></textarea>
           <div class="form-footer"><p id="commentStatus" class="message" role="status" aria-live="polite"></p><button id="commentButton" type="submit">댓글 등록</button></div>
         </form>
+        <div id="commentList" class="comment-list"></div>
       </section>
     </section>
 
