@@ -1,1 +1,111 @@
-<!doctype html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>자유 게시판</title><link rel="stylesheet" href="style.css"></head><body><main class="page"><header><p class="eyebrow">COMMUNITY BOARD</p><h1>자유 게시판</h1><p>게시글을 조회하고 제목으로 검색할 수 있습니다.</p></header><section class="card"><div class="heading"><div><h2>회원</h2><p id="accountEmail">로그인하면 게시글을 작성할 수 있습니다.</p></div><button id="logoutButton" hidden>로그아웃</button></div><div id="authForms" class="auth"><form id="signUpForm"><h3>회원가입</h3><label>이메일<input name="email" type="email" required></label><label>비밀번호<input name="password" type="password" minlength="6" required></label><button id="signUpButton">회원가입</button></form><form id="signInForm"><h3>로그인</h3><label>이메일<input name="email" type="email" required></label><label>비밀번호<input name="password" type="password" required></label><button id="signInButton">로그인</button></form></div><p id="authStatus" class="message"></p></section><section id="writeSection" class="card" hidden><h2>새 게시글 작성</h2><form id="writeForm"><label>제목 (1~200자)<input name="title" maxlength="200" required></label><label>본문<textarea name="content" rows="7" required></textarea></label><button id="writeButton">게시글 등록</button><p id="writeStatus" class="message"></p></form></section><section class="card"><form id="searchForm"><label>게시글 제목 검색</label><div class="search"><input id="searchInput" type="search" placeholder="검색할 제목을 입력하세요"><button>검색</button></div></form></section><section class="card"><div class="heading"><h2>게시글 목록</h2><p id="status" class="message"></p></div><div id="postList"></div></section><section id="detailSection" class="card" hidden><div class="heading"><h2>게시글 상세</h2><button id="closeDetailButton" type="button" class="cancel">닫기</button></div><h3 id="detailTitle"></h3><p id="detailContent"></p><p id="detailDate" class="date"></p><hr><h3>댓글</h3><div id="commentList"></div><form id="commentForm" hidden><label>댓글 내용<textarea id="commentContent" rows="4" required></textarea></label><button id="commentButton">댓글 등록</button></form><p id="commentStatus" class="message"></p></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boardly | 자유 게시판</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Boardly 홈"><span class="brand-mark">B</span>Boardly</a>
+    <form id="searchForm" class="top-search" role="search">
+      <label class="sr-only" for="searchInput">게시글 제목 검색</label>
+      <input id="searchInput" type="search" placeholder="게시글 제목 검색" autocomplete="off">
+      <button type="submit">검색</button>
+    </form>
+    <button id="logoutButton" class="logout-button" type="button" hidden>로그아웃</button>
+  </header>
+
+  <main class="layout">
+    <aside class="left-rail" aria-label="게시판 메뉴">
+      <p class="rail-title">메뉴</p>
+      <a class="rail-link is-active" href="#feed">⌂&nbsp; 전체 게시글</a>
+      <a class="rail-link" href="#writeSection">＋&nbsp; 글 작성</a>
+      <div class="rail-note">
+        <strong>자유 게시판</strong>
+        <span>자유롭게 정보를 나누고 의견을 남겨 보세요.</span>
+      </div>
+    </aside>
+
+    <section class="feed" id="feed">
+      <section class="welcome">
+        <p class="eyebrow">COMMUNITY</p>
+        <h1>자유 게시판</h1>
+        <p>관심 있는 이야기를 읽고, 로그인 후 직접 참여해 보세요.</p>
+      </section>
+
+      <section class="auth-card" aria-label="회원 인증">
+        <div class="account-row">
+          <div>
+            <p class="section-kicker">ACCOUNT</p>
+            <p id="accountEmail">로그인하면 게시글과 댓글을 작성할 수 있습니다.</p>
+          </div>
+        </div>
+        <div id="authForms" class="auth-forms">
+          <form id="signInForm" class="auth-form">
+            <h2>로그인</h2>
+            <label for="signInEmail">이메일</label>
+            <input id="signInEmail" name="email" type="email" autocomplete="email" required>
+            <label for="signInPassword">비밀번호</label>
+            <input id="signInPassword" name="password" type="password" autocomplete="current-password" required>
+            <button id="signInButton" type="submit">로그인</button>
+          </form>
+          <form id="signUpForm" class="auth-form">
+            <h2>처음이신가요?</h2>
+            <label for="signUpEmail">이메일</label>
+            <input id="signUpEmail" name="email" type="email" autocomplete="email" required>
+            <label for="signUpPassword">비밀번호 (6자 이상)</label>
+            <input id="signUpPassword" name="password" type="password" autocomplete="new-password" minlength="6" required>
+            <button id="signUpButton" type="submit" class="secondary-button">회원가입</button>
+          </form>
+        </div>
+        <p id="authStatus" class="message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="writeSection" class="write-card" hidden aria-labelledby="writeHeading">
+        <div class="card-heading"><div><p class="section-kicker">CREATE POST</p><h2 id="writeHeading">새 게시글 작성</h2></div></div>
+        <form id="writeForm">
+          <label for="postTitle">제목</label>
+          <input id="postTitle" name="title" maxlength="200" placeholder="제목을 입력하세요" required>
+          <label for="postContent">본문</label>
+          <textarea id="postContent" name="content" rows="7" placeholder="다른 회원에게 공유할 내용을 입력하세요" required></textarea>
+          <div class="form-footer"><p id="writeStatus" class="message" role="status" aria-live="polite"></p><button id="writeButton" type="submit">게시글 등록</button></div>
+        </form>
+      </section>
+
+      <section class="feed-heading">
+        <div><p class="section-kicker">DISCUSSIONS</p><h2>전체 게시글</h2></div>
+        <p id="status" class="message" role="status" aria-live="polite">게시글을 불러오는 중입니다.</p>
+      </section>
+      <div id="postList" class="post-list" aria-label="게시글 목록"></div>
+
+      <section id="detailSection" class="detail-card" hidden aria-labelledby="detailTitle">
+        <div class="card-heading"><p class="section-kicker">POST DETAIL</p><button id="closeDetailButton" class="text-button" type="button">닫기 ×</button></div>
+        <h2 id="detailTitle"></h2>
+        <p id="detailContent" class="detail-content"></p>
+        <p id="detailDate" class="post-meta"></p>
+        <hr>
+        <h3>댓글</h3>
+        <div id="commentList" class="comment-list"></div>
+        <form id="commentForm" class="comment-form" hidden>
+          <label for="commentContent">댓글 작성</label>
+          <textarea id="commentContent" rows="4" placeholder="예의를 지켜 의견을 남겨 주세요." required></textarea>
+          <div class="form-footer"><p id="commentStatus" class="message" role="status" aria-live="polite"></p><button id="commentButton" type="submit">댓글 등록</button></div>
+        </form>
+      </section>
+    </section>
+
+    <aside class="right-rail">
+      <section class="info-card">
+        <div class="info-banner"></div>
+        <div class="info-body"><h2>Boardly 안내</h2><p>누구나 글과 댓글을 읽을 수 있습니다. 로그인한 회원은 글과 댓글을 작성할 수 있습니다.</p></div>
+      </section>
+      <section class="rules-card"><h2>참여 규칙</h2><ol><li>서로를 존중하는 표현을 사용해 주세요.</li><li>개인정보를 게시글에 작성하지 마세요.</li><li>내가 작성한 글과 댓글만 수정·삭제할 수 있습니다.</li></ol></section>
+    </aside>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
